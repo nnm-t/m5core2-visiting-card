@@ -4,16 +4,51 @@
 
 #include <LovyanGFX.h>
 #include <Adafruit_NeoPixel.h>
+#include <Adafruit_SHT31.h>
 
 namespace {
     LGFX lcd;
     Ticker ticker;
 
-	Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(10, 2);
+    constexpr uint8_t brightness_min = 63;
+    constexpr uint8_t brightness_step = 32;
+    constexpr uint8_t brightness_max = 255;
+
+    constexpr size_t neopixel_num = 10;
+    constexpr size_t neopixel_pin = 2;
+
+	Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(neopixel_num, neopixel_pin);
+    Adafruit_SHT31 sht31;
 
     bool is_neopixel_on = false;
     bool show_qrcode = false;
-    uint8_t display_brightness = 63;
+    uint8_t display_brightness = 127;
+
+    constexpr uint32_t accent_color = 0xE4688F;
+}
+
+void showMenu()
+{
+    // 背景
+    lcd.fillRect(0, 216, 320, 24, accent_color);
+
+    // 文字
+    lcd.setFont(&fonts::lgfxJapanGothic_24);
+    lcd.setTextColor(TFT_WHITE, accent_color);
+    lcd.setTextDatum(TC_DATUM);
+    
+    lcd.drawString("LED", 60, 216);
+    lcd.drawString("輝度", 160, 216);
+    String button_c_str = show_qrcode ? "Icon" : "QR";
+    lcd.drawString(button_c_str, 260, 216);
+
+    lcd.setTextDatum(TL_DATUM);
+    lcd.setTextColor(TFT_WHITE, TFT_BLACK);
+
+    // 枠
+    lcd.drawRect(20, 216, 80, 24, TFT_WHITE);
+    lcd.drawRect(120, 216, 80, 24, TFT_WHITE);
+    lcd.drawRect(220, 216, 80, 24, TFT_WHITE);
 }
 
 void showQrCode()
@@ -22,6 +57,7 @@ void showQrCode()
     // QRコード
     lcd.qrcode("https://twitter.com/nnm_t", 200, 60, 120, 6);
     show_qrcode = true;
+    showMenu();
 }
 
 void showIllust()
@@ -30,10 +66,24 @@ void showIllust()
     // イラスト
     lcd.drawPngFile(SD, "/nnmchan.png", 200, 0);
     show_qrcode = false;
+    showMenu();
+}
+
+void vibrateOn()
+{
+    M5.Axp.SetLDOEnable(3, true);
+    delay(100);
+    M5.Axp.SetLDOEnable(3, false);
+}
+
+void setLed(bool is_on)
+{
+    M5.Axp.SetLed(is_on);
 }
 
 void setup() {
     M5.begin();
+	sht31.begin();
     lcd.init();
 
     lcd.setFont(&fonts::lgfxJapanGothic_40);
@@ -49,41 +99,58 @@ void setup() {
 	lcd.fillRect(25, 10, 3, 4, TFT_WHITE);
 
     neopixel.begin();
-    for (size_t i = 0; i < 10; i++)
-    {
-        neopixel.setPixelColor(i, 255, 255, 255);
-    }
 
     lcd.setBrightness(display_brightness);
 
-    ticker.attach_ms(50, onTimerTicked);
+    ticker.attach_ms(100, onTimerTicked);
 }
 
 void loop()
 {
+
 }
+
 
 void onTimerTicked()
 {
     M5.update();
 
+    // タッチ中LED消灯
+    if (M5.Touch.ispressed())
+    {
+        setLed(false);
+    }
+    else
+    {
+        setLed(true);
+    }
+
     if (M5.BtnA.wasPressed())
     {
         // NeoPixel点灯
-        const uint8_t brightness = is_neopixel_on ? 31 : 0;
-        neopixel.setBrightness(brightness);
+        const uint32_t color = neopixel.Color(255, 255, 255);
+
+        neopixel.clear();
+        for (size_t i = 0; i < neopixel_num; i++)
+        {
+            neopixel.setPixelColor(i, color);
+            neopixel.setBrightness(is_neopixel_on ? 0 : 31);
+            neopixel.show();
+        }
+
         is_neopixel_on = !is_neopixel_on;
-        neopixel.show();
+        vibrateOn();
     }
 
     if (M5.BtnB.wasPressed())
     {
-        display_brightness += 32;
-        if (display_brightness >= 255)
+        display_brightness += brightness_step;
+        if (display_brightness >= brightness_max)
         {
-            display_brightness = 63;
+            display_brightness = brightness_min;
         }
         lcd.setBrightness(display_brightness);
+        vibrateOn();
     }
 
     if (M5.BtnC.wasPressed())
@@ -96,11 +163,17 @@ void onTimerTicked()
         {
             showQrCode();
         }
+        vibrateOn();
     }
 
     // 背景埋め
-	lcd.fillRect(60, 0, 64, 25, TFT_BLACK);
+	lcd.fillRect(40, 0, 160, 48, TFT_BLACK);
+
     // 電圧
     float voltage = M5.Axp.GetBatVoltage();
     lcd.drawString(String(voltage) + "V", 40, 0);
+    // 温湿度
+    float temperature = sht31.readTemperature();
+    float humidity = sht31.readHumidity();
+    lcd.drawString(String(temperature, 0) + "℃, " + String(humidity, 0) + "％", 40, 24);
 }
