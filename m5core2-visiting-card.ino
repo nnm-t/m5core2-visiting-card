@@ -13,6 +13,7 @@
 #include <LovyanGFX.h>
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_SHT31.h>
+#include <ArduinoJson.h>
 
 namespace {
     LGFX lcd;

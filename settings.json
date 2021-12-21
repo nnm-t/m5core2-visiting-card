@@ -1,0 +1,13 @@
+{
+    "image": {
+        "src": "/nnmchan.png",
+        "x": 200,
+        "y": 0
+    },
+    "text": {
+        "name": "神沢野並",
+        "top": "2日目 東ニ-25a",
+        "bottom": "@nnm_t"
+    },
+    "qrcode": "https://twitter.com/nnm_t"
+}
