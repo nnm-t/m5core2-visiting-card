@@ -1,5 +1,13 @@
+
+#define BOARD_M5CORE2
+
 #include <Arduino.h>
+#ifdef BOARD_M5CORE
+#include <M5Stack.h>
+#endif
+#ifdef BOARD_M5CORE2
 #include <M5Core2.h>
+#endif
 #include <Ticker.h>
 
 #include <LovyanGFX.h>
@@ -15,10 +23,18 @@ namespace {
     constexpr uint8_t brightness_max = 255;
 
     constexpr size_t neopixel_num = 10;
+
+#ifdef BOARD_M5CORE
+    constexpr size_t neopixel_pin = 15;
+#endif
+#ifdef BOARD_M5CORE2
     constexpr size_t neopixel_pin = 2;
+#endif
 
 	Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(neopixel_num, neopixel_pin);
+#ifdef ENABLE_SHT31
     Adafruit_SHT31 sht31;
+#endif
 
     bool is_neopixel_on = false;
     bool show_qrcode = false;
@@ -71,26 +87,37 @@ void showIllust()
 
 void vibrateOn()
 {
+#ifdef BOARD_M5CORE2
     M5.Axp.SetLDOEnable(3, true);
-    delay(100);
+#endif
+}
+
+void vibrateOff()
+{
+#ifdef BOARD_M5CORE2
     M5.Axp.SetLDOEnable(3, false);
+#endif
 }
 
 void setLed(bool is_on)
 {
+#ifdef BOARD_M5CORE2
     M5.Axp.SetLed(is_on);
+#endif
 }
 
 void setup() {
     M5.begin();
+#ifdef ENABLE_SHT31
 	sht31.begin();
+#endif
     lcd.init();
 
     lcd.setFont(&fonts::lgfxJapanGothic_40);
     lcd.drawString("神沢野並", 20, 100);
 
     lcd.setFont(&fonts::lgfxJapanGothic_24);
-    lcd.drawString("F30a", 20, 68);
+    lcd.drawString("2日目 東ニ-25a", 20, 68);
     lcd.drawString("@nnm_t", 20, 148);
 
     showIllust();
@@ -115,15 +142,19 @@ void onTimerTicked()
 {
     M5.update();
 
+#ifdef BOARD_M5CORE2
     // タッチ中LED消灯
     if (M5.Touch.ispressed())
     {
         setLed(false);
+        vibrateOn();
     }
     else
     {
         setLed(true);
+        vibrateOff();
     }
+#endif
 
     if (M5.BtnA.wasPressed())
     {
@@ -139,7 +170,6 @@ void onTimerTicked()
         }
 
         is_neopixel_on = !is_neopixel_on;
-        vibrateOn();
     }
 
     if (M5.BtnB.wasPressed())
@@ -150,7 +180,6 @@ void onTimerTicked()
             display_brightness = brightness_min;
         }
         lcd.setBrightness(display_brightness);
-        vibrateOn();
     }
 
     if (M5.BtnC.wasPressed())
@@ -163,17 +192,25 @@ void onTimerTicked()
         {
             showQrCode();
         }
-        vibrateOn();
     }
 
     // 背景埋め
 	lcd.fillRect(40, 0, 160, 48, TFT_BLACK);
-
+#ifdef BOARD_M5CORE
+    // 電池残量
+    int8_t battery_level = M5.Power.getBatteryLevel();
+    lcd.drawString(String(battery_level) + "%", 40, 0);
+#endif
+#ifdef BOARD_M5CORE2
     // 電圧
     float voltage = M5.Axp.GetBatVoltage();
     lcd.drawString(String(voltage) + "V", 40, 0);
+#endif
+
+#ifdef ENABLE_SHT31
     // 温湿度
     float temperature = sht31.readTemperature();
     float humidity = sht31.readHumidity();
     lcd.drawString(String(temperature, 0) + "℃, " + String(humidity, 0) + "％", 40, 24);
+#endif
 }
