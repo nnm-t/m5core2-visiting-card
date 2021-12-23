@@ -1,5 +1,5 @@
 
-#define BOARD_M5CORE2
+#include "config.h"
 
 #include <Arduino.h>
 #ifdef BOARD_M5CORE
@@ -15,9 +15,15 @@
 #include <Adafruit_SHT31.h>
 #include <ArduinoJson.h>
 
+#include "text.h"
+
 namespace {
     LGFX lcd;
     Ticker ticker;
+    
+    StaticJsonDocument<4096> json_document;
+
+    Text text(&lcd);
 
     constexpr uint8_t brightness_min = 63;
     constexpr uint8_t brightness_step = 32;
@@ -114,12 +120,17 @@ void setup() {
 #endif
     lcd.init();
 
-    lcd.setFont(&fonts::lgfxJapanGothic_40);
-    lcd.drawString("神沢野並", 20, 100);
+    File json_file = SD.open("settings.json");
+    DeserializationError error = deserializeJson(json_document, json_file);
 
-    lcd.setFont(&fonts::lgfxJapanGothic_24);
-    lcd.drawString("2日目 東ニ-25a", 20, 68);
-    lcd.drawString("@nnm_t", 20, 148);
+    if (error != DeserializationError::Ok)
+    {
+        return;
+    }
+
+    JsonVariant json_text = json_document["text"];
+    text.begin(json_text);
+    text.show();
 
     showIllust();
 	// 電池アイコン
@@ -195,8 +206,6 @@ void onTimerTicked()
         }
     }
 
-    // 背景埋め
-	lcd.fillRect(40, 0, 160, 48, TFT_BLACK);
 #ifdef BOARD_M5CORE
     // 電池残量
     int8_t battery_level = M5.Power.getBatteryLevel();
