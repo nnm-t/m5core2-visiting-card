@@ -12,7 +12,9 @@
 
 #include <LovyanGFX.h>
 #include <Adafruit_NeoPixel.h>
+#ifdef ENABLE_SHT31
 #include <Adafruit_SHT31.h>
+#endif
 #include <ArduinoJson.h>
 
 #include "text.h"
