@@ -1,6 +1,9 @@
 {
     "background": [255, 255, 255],
-    "accent": [228, 104, 143],
+    "menu": {
+        "foreground": [255, 255, 255],
+        "background": [228, 104, 143]
+    },
     "led": {
         "color": [255, 255, 255],
         "pattern": 0
