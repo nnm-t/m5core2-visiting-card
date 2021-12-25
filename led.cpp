@@ -12,13 +12,13 @@ LED LED::fromJson(JsonVariant& json_led)
 
 void LED::begin(Adafruit_NeoPixel* const neopixel)
 {
-    const uint32_t neopixel_color = neopixel->Color(color.getRed(), color.getGreen(), color.getBlue());
+    const uint32_t neopixel_color = neopixel->Color(_color.getRed(), _color.getGreen(), _color.getBlue());
 
     neopixel->clear();
 
     for (size_t i = 0; i < neopixel_num; i++)
     {
-        neopixel->setPixelColor(i, color);
+        neopixel->setPixelColor(i, neopixel_color);
         // todo: Patternによって変更
         neopixel->setBrightness(31);
         neopixel->show();

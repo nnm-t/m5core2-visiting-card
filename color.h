@@ -9,6 +9,7 @@
 #include <M5Core2.h>
 #endif
 
+#include <LovyanGFX.h>
 #include <ArduinoJson.h>
 
 class Color

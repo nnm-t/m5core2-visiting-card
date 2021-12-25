@@ -11,5 +11,6 @@ Image Image::fromJson(JsonVariant& json_image)
 
 void Image::show(LGFX* const lcd)
 {
+    // todo: 拡張子ごとに分岐
     lcd->drawBmpFile(SD, _src, _x, _y);
 }
