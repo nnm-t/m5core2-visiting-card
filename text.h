@@ -4,6 +4,9 @@
 
 #include <vector>
 
+#ifdef BOARD_M5CORE
+#include <M5Stack.h>
+#endif
 #ifdef BOARD_M5CORE2
 #include <M5Core2.h>
 #endif

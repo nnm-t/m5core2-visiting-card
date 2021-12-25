@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef BOARD_M5STACK
+#ifdef BOARD_M5CORE
 #include <M5Stack.h>
 #endif
 #ifdef BOARD_M5CORE2
