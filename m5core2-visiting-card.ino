@@ -41,10 +41,7 @@ namespace {
     constexpr size_t neopixel_pin = 2;
     #endif
 
-	Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(neopixel_num, neopixel_pin);
-#ifdef ENABLE_SHT31
-    Adafruit_SHT31 sht31;
-#endif
+    Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(neopixel_num, neopixel_pin);
 
     uint8_t display_brightness = 127;
 }
@@ -72,9 +69,6 @@ void setLed(bool is_on)
 
 void setup() {
     M5.begin();
-#ifdef ENABLE_SHT31
-	sht31.begin();
-#endif
     lcd.init();
     lcd.setColorDepth(24);
 
@@ -95,9 +89,6 @@ void setup() {
     pStateManager = new StateManager(*pSettings);
     pStateManager->begin();
 
-	// 電池アイコン
-	lcd.fillRect(10, 7, 15, 10, TFT_WHITE);
-	lcd.fillRect(25, 10, 3, 4, TFT_WHITE);
     // 輝度default
     lcd.setBrightness(display_brightness);
 
@@ -151,23 +142,6 @@ void onTimerTicked()
         pStateManager->toggleState();
     }
 
-#ifdef BOARD_M5CORE
-    // 電池残量
-    int8_t battery_level = M5.Power.getBatteryLevel();
-    lcd.drawString(String(battery_level) + "%", 40, 0);
-#endif
-#ifdef BOARD_M5CORE2
-    // 電圧
-    float voltage = M5.Axp.GetBatVoltage();
-    lcd.drawString(String(voltage) + "V", 40, 0);
-#endif
-
-#ifdef ENABLE_SHT31
-    // 温湿度
-    float temperature = sht31.readTemperature();
-    float humidity = sht31.readHumidity();
-    lcd.drawString(String(temperature, 0) + "℃, " + String(humidity, 0) + "％", 40, 24);
-#endif
 
     pSettings->update();
     pStateManager->update();

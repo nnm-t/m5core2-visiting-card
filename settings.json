@@ -1,4 +1,5 @@
 {
+    "foreground": [255, 255, 255],
     "background": [0, 0, 0],
     "menu": {
         "foreground": [255, 255, 255],

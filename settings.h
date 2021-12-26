@@ -26,7 +26,11 @@ class Settings
 {
     LGFX* _lcd = nullptr;
     Adafruit_NeoPixel* _neopixel = nullptr;
+#ifdef ENABLE_SHT31
+    Adafruit_SHT31* _sht31 = nullptr;
+#endif
 
+    Color _foreground;
 	Color _background;
     Menu _menu;
     LED _led;
@@ -37,12 +41,16 @@ class Settings
 public:
     static Settings* fromJson(JsonDocument& json_document);
 
-    Settings(Color& background, Menu& menu, LED& led, Image& image, std::vector<TextElement> text_elements, QRCode& qrcode) : _background(background), _menu(menu), _led(led), _image(image), _text_elements(text_elements), _qrcode(qrcode)
+    Settings(Color& foreground, Color& background, Menu& menu, LED& led, Image& image, std::vector<TextElement> text_elements, QRCode& qrcode) : _foreground(foreground), _background(background), _menu(menu), _led(led), _image(image), _text_elements(text_elements), _qrcode(qrcode)
     {
 
     }
 
+#ifdef ENABLE_SHT31
+    void begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel, Adafruit_SHT31* const sht31);
+#else
     void begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel);
+#endif
 
     void toggleLED();
 
