@@ -44,5 +44,13 @@ public:
 
     void begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel);
 
+    void showCommon();
+
+    void showImage();
+
+    void showQR();
+
+    void clearLCD();
+
     void update();
 };

@@ -18,6 +18,7 @@
 #include <ArduinoJson.h>
 
 #include "settings.h"
+#include "state-manager.h"
 
 namespace {
     LGFX lcd;
@@ -26,20 +27,19 @@ namespace {
     StaticJsonDocument<4096> json_document;
 
     Settings* pSettings;
+    StateManager* pStateManager;
 
     constexpr uint8_t brightness_min = 63;
     constexpr uint8_t brightness_step = 32;
     constexpr uint8_t brightness_max = 255;
 
-    // todo: config.h へ移動
     constexpr size_t neopixel_num = 10;
-
-#ifdef BOARD_M5CORE
+    #ifdef BOARD_M5CORE
     constexpr size_t neopixel_pin = 15;
-#endif
-#ifdef BOARD_M5CORE2
+    #endif
+    #ifdef BOARD_M5CORE2
     constexpr size_t neopixel_pin = 2;
-#endif
+    #endif
 
 	Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(neopixel_num, neopixel_pin);
 #ifdef ENABLE_SHT31
@@ -85,8 +85,13 @@ void setup() {
         return;
     }
 
+    // 設定/制御
     pSettings = Settings::fromJson(json_document);
     pSettings->begin(&lcd, &neopixel);
+
+    // 状態管理
+    pStateManager = new StateManager(*pSettings);
+    pStateManager->begin();
 
 	// 電池アイコン
 	lcd.fillRect(10, 7, 15, 10, TFT_WHITE);
@@ -140,6 +145,7 @@ void onTimerTicked()
     if (M5.BtnC.wasPressed())
     {
         // QRコード切替
+        pStateManager->toggleState();
     }
 
 #ifdef BOARD_M5CORE
@@ -161,4 +167,5 @@ void onTimerTicked()
 #endif
 
     pSettings->update();
+    pStateManager->update();
 }

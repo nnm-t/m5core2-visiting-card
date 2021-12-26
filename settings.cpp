@@ -36,22 +36,46 @@ void Settings::begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel)
     _lcd = lcd;
     _neopixel = neopixel;
 
-    // 表示
-    _lcd->fillScreen(_background.getRGB888());
+    // LCDクリア
+    clearLCD();
+    // 共通表示
+    showCommon();
 
+    // NeoPixel
+    _led.begin(_neopixel);
+}
+
+void Settings::showCommon()
+{
+    // 共通表示
     for (TextElement& text_element: _text_elements)
     {
         text_element.show(_lcd);
     }
 
     _menu.show(_lcd);
+}
 
-    _led.begin(_neopixel);
+void Settings::showImage()
+{
+    // 画像表示
+    _image.show(_lcd);
+}
 
-    // 画像/QR 状態管理/表示
+void Settings::showQR()
+{
+    // QRコード表示
+    _qrcode.show(_lcd);
+}
+
+void Settings::clearLCD()
+{
+    // LCDクリア
+    _lcd->fillScreen(_background.getRGB888());
 }
 
 void Settings::update()
 {
+    // 更新
     _led.update(_neopixel);
 }
