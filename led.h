@@ -20,9 +20,16 @@
 class LED
 {
     static constexpr const size_t neopixel_num = 10;
+    static constexpr const uint8_t brightness_min = 0;
+    static constexpr const uint8_t brightness_max = 31;
+    static constexpr const size_t brightness_count_max = 20;
 
     const Color _color;
     const LEDPattern _pattern;
+
+    uint8_t _brightness = brightness_max;
+    bool _brightness_reverse = false;
+    size_t _brightness_count = 0;
 
 public:
     static LED fromJson(JsonVariant& json_led);
