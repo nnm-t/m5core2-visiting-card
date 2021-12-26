@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #ifdef BOARD_M5CORE
 #include <M5Stack.h>
 #endif
