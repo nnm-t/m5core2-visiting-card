@@ -17,7 +17,7 @@
 #endif
 #include <ArduinoJson.h>
 
-#include "text.h"
+#include "settings.h"
 
 namespace {
     LGFX lcd;
@@ -25,12 +25,13 @@ namespace {
     
     StaticJsonDocument<4096> json_document;
 
-    Text text(&lcd);
+    Settings* pSettings;
 
     constexpr uint8_t brightness_min = 63;
     constexpr uint8_t brightness_step = 32;
     constexpr uint8_t brightness_max = 255;
 
+    // todo: config.h へ移動
     constexpr size_t neopixel_num = 10;
 
 #ifdef BOARD_M5CORE
@@ -45,53 +46,7 @@ namespace {
     Adafruit_SHT31 sht31;
 #endif
 
-    bool is_neopixel_on = false;
-    bool show_qrcode = false;
     uint8_t display_brightness = 127;
-
-    constexpr uint32_t accent_color = 0xE4688F;
-}
-
-void showMenu()
-{
-    // 背景
-    lcd.fillRect(0, 216, 320, 24, accent_color);
-
-    // 文字
-    lcd.setFont(&fonts::lgfxJapanGothic_24);
-    lcd.setTextColor(TFT_WHITE, accent_color);
-    lcd.setTextDatum(TC_DATUM);
-    
-    lcd.drawString("LED", 60, 216);
-    lcd.drawString("輝度", 160, 216);
-    String button_c_str = show_qrcode ? "Icon" : "QR";
-    lcd.drawString(button_c_str, 260, 216);
-
-    lcd.setTextDatum(TL_DATUM);
-    lcd.setTextColor(TFT_WHITE, TFT_BLACK);
-
-    // 枠
-    lcd.drawRect(20, 216, 80, 24, TFT_WHITE);
-    lcd.drawRect(120, 216, 80, 24, TFT_WHITE);
-    lcd.drawRect(220, 216, 80, 24, TFT_WHITE);
-}
-
-void showQrCode()
-{
-    lcd.fillRect(200, 0, 120, 240, TFT_BLACK);
-    // QRコード
-    lcd.qrcode("https://twitter.com/nnm_t", 200, 60, 120, 6);
-    show_qrcode = true;
-    showMenu();
-}
-
-void showIllust()
-{
-    lcd.fillRect(200, 0, 120, 240, TFT_BLACK);
-    // イラスト
-    lcd.drawPngFile(SD, "/nnmchan.png", 200, 0);
-    show_qrcode = false;
-    showMenu();
 }
 
 void vibrateOn()
@@ -130,17 +85,13 @@ void setup() {
         return;
     }
 
-    JsonVariant json_text = json_document["text"];
-    text.begin(json_text);
-    text.show();
+    pSettings = Settings::fromJson(json_document);
+    pSettings->begin(&lcd, &neopixel);
 
-    showIllust();
 	// 電池アイコン
 	lcd.fillRect(10, 7, 15, 10, TFT_WHITE);
 	lcd.fillRect(25, 10, 3, 4, TFT_WHITE);
-
-    neopixel.begin();
-
+    // 輝度default
     lcd.setBrightness(display_brightness);
 
     ticker.attach_ms(100, onTimerTicked);
@@ -172,22 +123,12 @@ void onTimerTicked()
 
     if (M5.BtnA.wasPressed())
     {
-        // NeoPixel点灯
-        const uint32_t color = neopixel.Color(255, 255, 255);
-
-        neopixel.clear();
-        for (size_t i = 0; i < neopixel_num; i++)
-        {
-            neopixel.setPixelColor(i, color);
-            neopixel.setBrightness(is_neopixel_on ? 0 : 31);
-            neopixel.show();
-        }
-
-        is_neopixel_on = !is_neopixel_on;
+        // NeoPixel点灯/消灯
     }
 
     if (M5.BtnB.wasPressed())
     {
+        // 輝度調整
         display_brightness += brightness_step;
         if (display_brightness >= brightness_max)
         {
@@ -198,14 +139,7 @@ void onTimerTicked()
 
     if (M5.BtnC.wasPressed())
     {
-        if (show_qrcode)
-        {
-            showIllust();
-        }
-        else
-        {
-            showQrCode();
-        }
+        // QRコード切替
     }
 
 #ifdef BOARD_M5CORE
@@ -225,4 +159,6 @@ void onTimerTicked()
     float humidity = sht31.readHumidity();
     lcd.drawString(String(temperature, 0) + "℃, " + String(humidity, 0) + "％", 40, 24);
 #endif
+
+    pSettings->update();
 }
