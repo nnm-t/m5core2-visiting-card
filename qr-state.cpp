@@ -3,6 +3,6 @@
 void QRState::begin()
 {
     _settings.clearLCD();
-    _settings.showCommon();
     _settings.showQR();
+    _settings.showCommon();
 }

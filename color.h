@@ -43,6 +43,6 @@ public:
 
     const uint32_t getRGB888() const
     {
-        return _red << 16 + _green << 8 + _blue;
+        return (_red << 16) + (_green << 8) + _blue;
     }
 };

@@ -76,6 +76,7 @@ void setup() {
 	sht31.begin();
 #endif
     lcd.init();
+    lcd.setColorDepth(24);
 
     File json_file = SD.open("/settings.json");
     DeserializationError error = deserializeJson(json_document, json_file);
