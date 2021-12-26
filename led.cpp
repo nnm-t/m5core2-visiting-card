@@ -12,16 +12,7 @@ LED LED::fromJson(JsonVariant& json_led)
 
 void LED::begin(Adafruit_NeoPixel* const neopixel)
 {
-    const uint32_t neopixel_color = neopixel->Color(_color.getRed(), _color.getGreen(), _color.getBlue());
-
-    neopixel->clear();
-
-    for (size_t i = 0; i < neopixel_num; i++)
-    {
-        neopixel->setPixelColor(i, neopixel_color);
-        neopixel->setBrightness(_brightness);
-        neopixel->show();
-    }
+    neopixel->begin();
 }
 
 void LED::update(Adafruit_NeoPixel* const neopixel)
@@ -78,5 +69,13 @@ void LED::update(Adafruit_NeoPixel* const neopixel)
     if (_brightness_count >= brightness_count_max)
     {
         _brightness_count = 0;
+    }
+
+    const uint32_t neopixel_color = neopixel->Color(_color.getRed(), _color.getGreen(), _color.getBlue());
+    for (size_t i = 0; i < neopixel_num; i++)
+    {
+        neopixel->setPixelColor(i, neopixel_color);
+        neopixel->setBrightness(_brightness);
+        neopixel->show();
     }
 }
