@@ -17,6 +17,15 @@ void LED::begin(Adafruit_NeoPixel* const neopixel)
 
 void LED::update(Adafruit_NeoPixel* const neopixel)
 {
+    if (!_is_enabled)
+    {
+        // 無効
+        _brightness_count = 0;
+        _brightness_reverse = false;
+        neopixel->clear();
+        return;
+    }
+
     // カウント
     _brightness_count++;
 

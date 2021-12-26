@@ -44,6 +44,8 @@ public:
 
     void begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel);
 
+    void toggleLED();
+
     void showCommon();
 
     void showImage();

@@ -77,11 +77,12 @@ void setup() {
 #endif
     lcd.init();
 
-    File json_file = SD.open("settings.json");
+    File json_file = SD.open("/settings.json");
     DeserializationError error = deserializeJson(json_document, json_file);
 
     if (error != DeserializationError::Ok)
     {
+        Serial.println("JSON Deserialization Error");
         return;
     }
 
@@ -129,6 +130,7 @@ void onTimerTicked()
     if (M5.BtnA.wasPressed())
     {
         // NeoPixel点灯/消灯
+        pSettings->toggleLED();
     }
 
     if (M5.BtnB.wasPressed())

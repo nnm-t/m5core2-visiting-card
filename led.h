@@ -27,6 +27,7 @@ class LED
     const Color _color;
     const LEDPattern _pattern;
 
+    bool _is_enabled = false;
     uint8_t _brightness = brightness_max;
     bool _brightness_reverse = false;
     size_t _brightness_count = 0;
@@ -37,6 +38,11 @@ public:
     LED(const Color& color, const LEDPattern pattern) : _color(color), _pattern(pattern)
     {
 
+    }
+
+    void toggle()
+    {
+        _is_enabled = !_is_enabled;
     }
 
     void begin(Adafruit_NeoPixel* const neopixel);

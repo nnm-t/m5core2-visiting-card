@@ -45,6 +45,11 @@ void Settings::begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel)
     _led.begin(_neopixel);
 }
 
+void Settings::toggleLED()
+{
+    _led.toggle();
+}
+
 void Settings::showCommon()
 {
     // 共通表示
