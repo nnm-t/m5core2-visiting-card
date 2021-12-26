@@ -15,6 +15,10 @@
 
 class Image
 {
+    static constexpr const char* extension_bmp = ".bmp";
+    static constexpr const char* extension_png = ".png";
+    static constexpr const char* extension_jpg = ".jpg";
+
     const int32_t _x;
     const int32_t _y;
     String _src;
