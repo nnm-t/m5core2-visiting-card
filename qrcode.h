@@ -20,7 +20,7 @@ class QRCode
     String _url;
 
 public:
-    QRCode fromJson(JsonVariant& json_qrcode);
+    static QRCode fromJson(JsonVariant& json_qrcode);
 
     QRCode(const uint32_t x, const uint32_t y, const int32_t width, String& url) : _x(x), _y(y), _width(width), _url(url)
     {

@@ -24,7 +24,7 @@ class Image
     String _src;
 
 public:
-    Image fromJson(JsonVariant& json_image);
+    static Image fromJson(JsonVariant& json_image);
 
     Image(const uint32_t x, const uint32_t y, String& src) : _x(x), _y(y), _src(src)
     {
