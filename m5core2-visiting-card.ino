@@ -142,7 +142,6 @@ void onTimerTicked()
         pStateManager->toggleState();
     }
 
-
     pSettings->update();
     pStateManager->update();
 }

@@ -22,11 +22,9 @@ void LED::update(Adafruit_NeoPixel* const neopixel)
         // 無効
         _brightness_count = 0;
         _brightness_reverse = false;
-        for (size_t i = 0; i < neopixel_num; i++)
-        {
-            neopixel->setBrightness(0);
-            neopixel->show();
-        }
+
+        neopixel->setBrightness(0);
+        neopixel->show();
         return;
     }
 
@@ -88,7 +86,7 @@ void LED::update(Adafruit_NeoPixel* const neopixel)
     for (size_t i = 0; i < neopixel_num; i++)
     {
         neopixel->setPixelColor(i, neopixel_color);
-        neopixel->setBrightness(_brightness);
-        neopixel->show();
     }
+    neopixel->setBrightness(_brightness);
+    neopixel->show();
 }
