@@ -1,8 +1,10 @@
 #include "qr-state.h"
 
-void QRState::begin()
+void QRState::begin(Settings* settings)
 {
-    _settings.clearLCD();
-    _settings.showQR();
-    _settings.showCommon();
+    _settings = settings;
+
+    _settings->clearLCD();
+    _settings->showQR();
+    _settings->showCommon();
 }

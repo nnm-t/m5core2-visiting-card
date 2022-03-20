@@ -16,15 +16,15 @@
 
 class ImageState : public IState
 {
-    Settings& _settings;
+    Settings* _settings = nullptr;
 
 public:
-    ImageState(Settings& settings) : _settings(settings)
+    ImageState()
     {
 
     }
 
-    void begin() override;
+    void begin(Settings* settings) override;
 
     void update() override
     {

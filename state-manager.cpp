@@ -1,8 +1,11 @@
 #include "state-manager.h"
 
-void StateManager::begin()
+void StateManager::begin(Settings* settings)
 {
-    _state->begin();
+    _settings = settings;
+
+    _state = &_image_state;
+    _state->begin(_settings);
 }
 
 void StateManager::toggleState()
@@ -16,7 +19,7 @@ void StateManager::toggleState()
         _state = &_image_state;
     }
 
-    _state->begin();
+    _state->begin(_settings);
 }
 
 void StateManager::update()

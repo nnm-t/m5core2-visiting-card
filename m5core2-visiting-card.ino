@@ -26,8 +26,10 @@ namespace {
     
     StaticJsonDocument<4096> json_document;
 
-    Settings* pSettings;
-    StateManager* pStateManager;
+    Settings* pSettings = nullptr;
+    ImageState image_state;
+    QRState qr_state;
+    StateManager stateManager(image_state, qr_state);
 
     constexpr uint8_t brightness_min = 63;
     constexpr uint8_t brightness_step = 32;
@@ -86,8 +88,7 @@ void setup() {
     pSettings->begin(&lcd, &neopixel);
 
     // 状態管理
-    pStateManager = new StateManager(*pSettings);
-    pStateManager->begin();
+    stateManager.begin(pSettings);
 
     // 輝度default
     lcd.setBrightness(display_brightness);
@@ -139,9 +140,9 @@ void onTimerTicked()
     if (M5.BtnC.wasPressed())
     {
         // QRコード切替
-        pStateManager->toggleState();
+        stateManager.toggleState();
     }
 
     pSettings->update();
-    pStateManager->update();
+    stateManager.update();
 }

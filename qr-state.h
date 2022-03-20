@@ -16,15 +16,15 @@
 
 class QRState : public IState
 {
-    Settings& _settings;
+    Settings* _settings = nullptr;
 
 public:
-    QRState(Settings& settings) : _settings(settings)
+    QRState()
     {
 
     }
 
-    void begin() override;
+    void begin(Settings* settings) override;
 
     void update() override
     {

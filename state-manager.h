@@ -18,18 +18,18 @@
 
 class StateManager
 {
-    ImageState _image_state;
-    QRState _qr_state;
+    Settings* _settings = nullptr;
+    ImageState& _image_state;
+    QRState& _qr_state;
 
-    IState* _state;
+    IState* _state = nullptr;
 
 public:
-    StateManager(Settings& settings) : _image_state(ImageState(settings)), _qr_state(QRState(settings))
+    StateManager(ImageState& image_state, QRState& qr_state) : _image_state(image_state), _qr_state(qr_state)
     {
-        _state = &_image_state;
     }
 
-    void begin();
+    void begin(Settings* settings);
 
     void toggleState();
 
