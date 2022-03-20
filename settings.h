@@ -47,9 +47,9 @@ public:
     }
 
 #ifdef ENABLE_SHT31
-    void begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel, Adafruit_SHT31* const sht31);
+    void begin(LGFX& lcd, Adafruit_NeoPixel& neopixel, Adafruit_SHT31& sht31);
 #else
-    void begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel);
+    void begin(LGFX& lcd, Adafruit_NeoPixel& neopixel);
 #endif
 
     void toggleLED();

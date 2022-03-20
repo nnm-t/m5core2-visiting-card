@@ -85,7 +85,7 @@ void setup() {
 
     // 設定/制御
     pSettings = Settings::fromJson(json_document);
-    pSettings->begin(&lcd, &neopixel);
+    pSettings->begin(lcd, neopixel);
 
     // 状態管理
     stateManager.begin(pSettings);

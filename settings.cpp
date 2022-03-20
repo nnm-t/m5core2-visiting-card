@@ -34,14 +34,14 @@ Settings* Settings::fromJson(JsonDocument& json_document)
 }
 
 #ifdef ENABLE_SHT31
-void Settings::begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel, Adafruit_SHT31* const sht31)
+void Settings::begin(LGFX& lcd, Adafruit_NeoPixel& neopixel, Adafruit_SHT31& sht31)
 #else
-void Settings::begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel)
+void Settings::begin(LGFX& lcd, Adafruit_NeoPixel& neopixel)
 #endif
 {
     // 代入
-    _lcd = lcd;
-    _neopixel = neopixel;
+    _lcd = &lcd;
+    _neopixel = &neopixel;
 
     // LCDクリア
     clearLCD();
@@ -51,7 +51,8 @@ void Settings::begin(LGFX* const lcd, Adafruit_NeoPixel* const neopixel)
     // NeoPixel
     _led.begin(_neopixel);
 #ifdef ENABLE_SHT31
-    _sht31.begin();
+    _sht31 = sht31;
+    _sht31->begin();
 #endif
 }
 
@@ -102,18 +103,18 @@ void Settings::update()
     // バッテリ残量
     #ifdef BOARD_M5CORE
         // 電池残量
-        int8_t battery_level = M5.Power.getBatteryLevel();
+        const int8_t battery_level = M5.Power.getBatteryLevel();
         _lcd->drawString(String(battery_level) + "%", 40, 0);
     #endif
     #ifdef BOARD_M5CORE2
         // 電圧
-        float voltage = M5.Axp.GetBatVoltage();
+        const float voltage = M5.Axp.GetBatVoltage();
         _lcd->drawString(String(voltage) + "V", 40, 0);
     #endif
     #ifdef ENABLE_SHT31
         // 温湿度
-        float temperature = _sht31.readTemperature();
-        float humidity = _sht31.readHumidity();
+        const float temperature = _sht31->readTemperature();
+        const float humidity = _sht31->readHumidity();
         _lcd->drawString(String(temperature, 0) + "℃, " + String(humidity, 0) + "％", 40, 24);
     #endif
     // LED
