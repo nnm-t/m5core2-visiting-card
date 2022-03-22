@@ -10,6 +10,9 @@
 #ifdef BOARD_M5CORE2
 #include <M5Core2.h>
 #endif
+#ifdef ENABLE_SHT31
+#include "Adafruit_SHT31.h"
+#endif
 
 #include <LovyanGFX.h>
 #include <ArduinoJson.h>

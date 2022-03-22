@@ -38,9 +38,17 @@ namespace {
     constexpr size_t neopixel_num = 10;
     #ifdef BOARD_M5CORE
     constexpr size_t neopixel_pin = 15;
+
+        #ifdef ENABLE_SHT31
+        Adafruit_SHT31 sht31(&Wire);
+        #endif
     #endif
     #ifdef BOARD_M5CORE2
     constexpr size_t neopixel_pin = 2;
+
+        #ifdef ENABLE_SHT31
+        Adafruit_SHT31 sht31(&Wire1);
+        #endif
     #endif
 
     Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(neopixel_num, neopixel_pin);
@@ -85,7 +93,11 @@ void setup() {
 
     // 設定/制御
     pSettings = Settings::fromJson(json_document);
+    #ifdef ENABLE_SHT31
+    pSettings->begin(lcd, neopixel, sht31);
+    #else
     pSettings->begin(lcd, neopixel);
+    #endif
 
     // 状態管理
     stateManager.begin(pSettings);

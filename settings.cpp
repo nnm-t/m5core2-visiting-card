@@ -51,8 +51,8 @@ void Settings::begin(LGFX& lcd, Adafruit_NeoPixel& neopixel)
     // NeoPixel
     _led.begin(_neopixel);
 #ifdef ENABLE_SHT31
-    _sht31 = sht31;
-    _sht31->begin();
+    _sht31 = &sht31;
+    _sht31->begin(SHT31_ADDRESS);
 #endif
 }
 
