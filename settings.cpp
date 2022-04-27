@@ -8,7 +8,9 @@ Settings* Settings::fromJson(JsonDocument& json_document)
     JsonVariant json_menu = json_document["menu"];
     Menu menu = Menu::fromJson(json_menu);
 
-    return new Settings(title, menu);
+    JsonArray pages_json = json_document["page"];
+
+    return new Settings(title, menu, pages_json);
 }
 
 #ifdef ENABLE_SHT31
@@ -32,25 +34,13 @@ void Settings::begin(LGFX& lcd, Adafruit_NeoPixel& neopixel)
 #endif
 }
 
-void Settings::toggleLED()
-{
-}
-
 void Settings::showCommon()
 {
     // 共通表示
     _title.begin(_lcd);
     _menu.show(_lcd);
-}
 
-void Settings::showImage()
-{
-    // 画像表示
-}
-
-void Settings::showQR()
-{
-    // QRコード表示
+    _pages_iterator->show(_lcd);
 }
 
 void Settings::clearLCD()
@@ -68,4 +58,24 @@ void Settings::update()
 #else
     _title.update(_lcd);
 #endif
+}
+
+void Settings::next()
+{
+    if (++_pages_iterator >= _pages.end())
+    {
+        _pages_iterator = _pages.begin();
+    }
+
+    showCommon();
+}
+
+void Settings::prev()
+{
+    if (--_pages_iterator < _pages.begin())
+    {
+        _pages_iterator = _pages.end() - 1;
+    }
+
+    showCommon();
 }

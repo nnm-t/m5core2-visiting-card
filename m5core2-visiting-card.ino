@@ -18,7 +18,6 @@
 #include <ArduinoJson.h>
 
 #include "settings.h"
-#include "state-manager.h"
 
 namespace {
     LGFX lcd;
@@ -27,9 +26,6 @@ namespace {
     StaticJsonDocument<4096> json_document;
 
     Settings* pSettings = nullptr;
-    ImageState image_state;
-    QRState qr_state;
-    StateManager stateManager(image_state, qr_state);
 
     constexpr uint8_t brightness_min = 63;
     constexpr uint8_t brightness_step = 32;
@@ -99,9 +95,6 @@ void setup() {
     pSettings->begin(lcd, neopixel);
     #endif
 
-    // 状態管理
-    stateManager.begin(pSettings);
-
     // 輝度default
     lcd.setBrightness(display_brightness);
 
@@ -134,8 +127,8 @@ void onTimerTicked()
 
     if (M5.BtnA.wasPressed())
     {
-        // NeoPixel点灯/消灯
-        pSettings->toggleLED();
+        // 前
+        pSettings->prev();
     }
 
     if (M5.BtnB.wasPressed())
@@ -151,10 +144,9 @@ void onTimerTicked()
 
     if (M5.BtnC.wasPressed())
     {
-        // QRコード切替
-        stateManager.toggleState();
+        // 次
+        pSettings->next();
     }
 
     pSettings->update();
-    stateManager.update();
 }

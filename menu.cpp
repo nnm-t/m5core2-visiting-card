@@ -21,9 +21,9 @@ void Menu::show(LGFX* const lcd)
     lcd->setTextColor(_foreground.getRGB888(), _background.getRGB888());
     lcd->setTextDatum(TC_DATUM);
     
-    lcd->drawString("LED", 60, 216);
+    lcd->drawString("前", 60, 216);
     lcd->drawString("輝度", 160, 216);
-    lcd->drawString("QR", 260, 216);
+    lcd->drawString("次", 260, 216);
 
     lcd->setTextDatum(TL_DATUM);
 

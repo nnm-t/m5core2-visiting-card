@@ -7,7 +7,7 @@
         "foreground": [255, 255, 255],
         "background": [228, 104, 143]
     },
-    "pages": [
+    "page": [
         {
             "background": [0, 0, 0],
             "image": {

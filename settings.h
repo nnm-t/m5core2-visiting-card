@@ -21,10 +21,7 @@
 #include "color.h"
 #include "title.h"
 #include "menu.h"
-#include "led.h"
-#include "image.h"
-#include "text-element.h"
-#include "qrcode.h"
+#include "page.h"
 
 class Settings
 {
@@ -36,13 +33,21 @@ class Settings
 
     Title _title;
     Menu _menu;
+    std::vector<Page> _pages;
+    std::vector<Page>::iterator _pages_iterator;
 
 public:
     static Settings* fromJson(JsonDocument& json_document);
 
-    Settings(Title& title, Menu& menu) : _menu(menu), _title(title)
+    Settings(Title& title, Menu& menu, JsonArray& pages_json) : _menu(menu), _title(title), _pages(std::vector<Page>())
     {
+        _pages.reserve(pages_json.size());
+        for (JsonObject&& page_json : pages_json)
+        {
+            _pages.push_back(Page::fromJson(page_json));
+        }
 
+        _pages_iterator = _pages.begin();
     }
 
 #ifdef ENABLE_SHT31
@@ -51,15 +56,13 @@ public:
     void begin(LGFX& lcd, Adafruit_NeoPixel& neopixel);
 #endif
 
-    void toggleLED();
-
     void showCommon();
-
-    void showImage();
-
-    void showQR();
 
     void clearLCD();
 
     void update();
+
+    void next();
+
+    void prev();
 };
