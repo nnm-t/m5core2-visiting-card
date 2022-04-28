@@ -78,6 +78,15 @@ void setup() {
     lcd.setColorDepth(24);
 
     File json_file = SD.open("/settings.json");
+
+    if (!json_file)
+    {
+        // ファイル無し
+        lcd.setTextFont(&fonts::lgfxJapanGothic_16);
+        lcd.drawString("MicroSD or settings.json 無し", 0, 0);
+        return;
+    }
+
     DeserializationError error = deserializeJson(json_document, json_file);
 
     if (error != DeserializationError::Ok)
