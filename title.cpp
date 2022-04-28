@@ -10,6 +10,8 @@ Title Title::fromJson(JsonVariant& json_title)
 
 void Title::begin(LGFX* const lcd)
 {
+    // 背景
+    lcd->fillRect(0, 0, 320, 24, _background.getRGB888());
     // 電池アイコン
     lcd->fillRect(10, 7, 15, 10, _foreground.getRGB888());
     lcd->fillRect(25, 10, 3, 4, _foreground.getRGB888());
