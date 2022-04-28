@@ -7,7 +7,8 @@
 #include <Arduino.h>
 #ifdef BOARD_M5CORE2
 #include <M5Core2.h>
-#elif BOARD_M5CORE
+#endif
+#ifdef BOARD_M5CORE
 #include <M5Stack.h>
 #endif
 #include <LovyanGFX.h>
