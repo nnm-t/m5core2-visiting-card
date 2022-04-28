@@ -26,6 +26,7 @@ void Title::update(LGFX* const lcd)
     // テキスト色指定等
     lcd->setTextColor(_foreground.getRGB888(), _background.getRGB888());
     lcd->setTextDatum(TL_DATUM);
+    lcd->setTextFont(&fonts::lgfxJapanGothic_24);
 
     // バッテリ残量
     #ifdef BOARD_M5CORE
