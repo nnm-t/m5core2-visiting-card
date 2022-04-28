@@ -1,4 +1,3 @@
-
 #include "config.h"
 
 #include <Arduino.h>
@@ -23,7 +22,7 @@ namespace {
     LGFX lcd;
     Ticker ticker;
     
-    StaticJsonDocument<4096> json_document;
+    StaticJsonDocument<8192> json_document;
 
     Settings* pSettings = nullptr;
 
