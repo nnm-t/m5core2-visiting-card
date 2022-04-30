@@ -17,6 +17,9 @@
 #include <ArduinoJson.h>
 
 #include "settings.h"
+#ifdef ENABLE_PLUS_MODULE
+#include "plus-encoder.h"
+#endif
 
 namespace {
     LGFX lcd;
@@ -31,19 +34,23 @@ namespace {
     constexpr uint8_t brightness_max = 255;
 
     constexpr size_t neopixel_num = 10;
+
     #ifdef BOARD_M5CORE
     constexpr size_t neopixel_pin = 15;
-
-        #ifdef ENABLE_SHT31
-        Adafruit_SHT31 sht31(&Wire);
-        #endif
+    TwoWire* wire = &Wire;
     #endif
+
     #ifdef BOARD_M5CORE2
     constexpr size_t neopixel_pin = 2;
+    TwoWire* wire = &Wire1;
+    #endif
 
-        #ifdef ENABLE_SHT31
-        Adafruit_SHT31 sht31(&Wire1);
-        #endif
+    #ifdef ENABLE_PLUS_MODULE
+    PlusEncoder plus_encoder(wire);
+    #endif
+
+    #ifdef ENABLE_SHT31
+    Adafruit_SHT31 sht31(wire);
     #endif
 
     Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(neopixel_num, neopixel_pin);
@@ -103,6 +110,8 @@ void setup() {
     pSettings->begin(lcd, neopixel);
     #endif
 
+    plus_encoder.begin([&] (int8_t encode) { Serial.println(String(encode, DEC)); }, [&] { Serial.println("press"); });
+
     // 輝度default
     lcd.setBrightness(display_brightness);
 
@@ -157,4 +166,5 @@ void onTimerTicked()
     }
 
     pSettings->update();
+    plus_encoder.update();
 }
