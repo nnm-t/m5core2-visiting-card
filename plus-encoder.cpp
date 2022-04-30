@@ -1,9 +1,9 @@
 #include "plus-encoder.h"
 
-void PlusEncoder::begin(std::function<void(int8_t)>&& on_rotate, std::function<void()>&& on_press)
+void PlusEncoder::begin(std::function<void(int8_t)>&& on_rotate, std::function<void()>&& on_pressed)
 {
     _on_rotate = on_rotate;
-    _on_press = on_press;
+    _on_pressed = on_pressed;
 }
 
 void PlusEncoder::update()
@@ -20,9 +20,18 @@ void PlusEncoder::update()
             _on_rotate(encode);
         }
 
-        if (is_press && _on_press != nullptr)
+        if (is_press && _on_pressed != nullptr)
         {
-            _on_press();
+            if (_is_pressed)
+            {
+                return;
+            }
+
+            _on_pressed();
+            _is_pressed = true;
+            return;
         }
+
+        _is_pressed = false;
     }
 }

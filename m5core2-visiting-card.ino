@@ -17,6 +17,7 @@
 #include <ArduinoJson.h>
 
 #include "settings.h"
+#include "counter.h"
 #ifdef ENABLE_PLUS_MODULE
 #include "plus-encoder.h"
 #endif
@@ -44,6 +45,8 @@ namespace {
     constexpr size_t neopixel_pin = 2;
     TwoWire* wire = &Wire1;
     #endif
+
+    Counter counter;
 
     #ifdef ENABLE_PLUS_MODULE
     PlusEncoder plus_encoder(wire);
@@ -105,12 +108,25 @@ void setup() {
     // 設定/制御
     pSettings = Settings::fromJson(json_document);
     #ifdef ENABLE_SHT31
-    pSettings->begin(lcd, neopixel, sht31);
+    pSettings->begin(lcd, counter, neopixel, sht31);
     #else
-    pSettings->begin(lcd, neopixel);
+    pSettings->begin(lcd, counter, neopixel);
     #endif
 
-    plus_encoder.begin([&] (int8_t encode) { Serial.println(String(encode, DEC)); }, [&] { Serial.println("press"); });
+    #ifdef ENABLE_PLUS_MODULE
+    plus_encoder.begin([&] (int8_t encode) { 
+        // Counter 周期変更
+        counter.set_count_num(counter.get_count_num() + encode);
+        // Title 描画
+        pSettings->draw_counter();
+    }, [&] { 
+        // Counter 停止/再開
+         counter.set_enabled(!counter.is_enabled());
+        // Title 描画
+        pSettings->draw_counter();
+    });
+    #endif
+    counter.begin([&] { pSettings->next(); });
 
     // 輝度default
     lcd.setBrightness(display_brightness);
@@ -166,5 +182,10 @@ void onTimerTicked()
     }
 
     pSettings->update();
+    counter.update();
+
+    // todo: I2C 受信できない
+    #ifdef ENABLE_PLUS_MODULE
     plus_encoder.update();
+    #endif
 }

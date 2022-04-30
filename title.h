@@ -17,11 +17,14 @@
 #endif
 
 #include "color.h"
+#include "counter.h"
 
 class Title
 {
     const Color _foreground;
     const Color _background;
+
+    void init_text(LGFX* const lcd);
 
 public:
     Title(const Color& foreground, const Color& background) : _foreground(foreground), _background(background)
@@ -43,4 +46,6 @@ public:
 #else
     void update(LGFX* const lcd);
 #endif
+
+    void draw_counter(LGFX* const lcd, Counter* const counter);
 };

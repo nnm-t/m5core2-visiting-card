@@ -18,9 +18,10 @@ class PlusEncoder
     static constexpr const size_t i2c_payload_size = 2;
 
     TwoWire* _wire;
+    bool _is_pressed = false;
 
     std::function<void(int8_t)> _on_rotate = nullptr;
-    std::function<void()> _on_press = nullptr;
+    std::function<void()> _on_pressed = nullptr;
 
 public:
     PlusEncoder(TwoWire* wire) : _wire(wire)
@@ -28,7 +29,7 @@ public:
 
     }
 
-    void begin(std::function<void(int8_t)>&& on_rotate = nullptr, std::function<void()>&& on_press = nullptr);
+    void begin(std::function<void(int8_t)>&& on_rotate = nullptr, std::function<void()>&& on_pressed = nullptr);
 
     void update();
 };

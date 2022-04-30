@@ -14,13 +14,14 @@ Settings* Settings::fromJson(JsonDocument& json_document)
 }
 
 #ifdef ENABLE_SHT31
-void Settings::begin(LGFX& lcd, Adafruit_NeoPixel& neopixel, Adafruit_SHT31& sht31)
+void Settings::begin(LGFX& lcd, Counter& counter, Adafruit_NeoPixel& neopixel, Adafruit_SHT31& sht31)
 #else
-void Settings::begin(LGFX& lcd, Adafruit_NeoPixel& neopixel)
+void Settings::begin(LGFX& lcd, Counter& counter, Adafruit_NeoPixel& neopixel)
 #endif
 {
     // 代入
     _lcd = &lcd;
+    _counter = &counter;
     _neopixel = &neopixel;
 
     // LCDクリア
@@ -38,6 +39,7 @@ void Settings::showCommon()
 {
     // 共通表示
     _title.begin(_lcd);
+    draw_counter();
     _menu.show(_lcd);
 
     _pages_iterator->show(_lcd);
