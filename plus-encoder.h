@@ -17,14 +17,14 @@ class PlusEncoder
     static constexpr const uint8_t i2c_address = 0x62;
     static constexpr const size_t i2c_payload_size = 2;
 
-    TwoWire* _wire;
+    TwoWire* const _wire;
     bool _is_pressed = false;
 
     std::function<void(int8_t)> _on_rotate = nullptr;
     std::function<void()> _on_pressed = nullptr;
 
 public:
-    PlusEncoder(TwoWire* wire) : _wire(wire)
+    PlusEncoder(TwoWire* const wire) : _wire(wire)
     {
 
     }

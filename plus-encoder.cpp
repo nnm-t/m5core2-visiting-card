@@ -8,12 +8,12 @@ void PlusEncoder::begin(std::function<void(int8_t)>&& on_rotate, std::function<v
 
 void PlusEncoder::update()
 {
-    Wire.requestFrom(i2c_address, i2c_payload_size);
+    _wire->requestFrom(i2c_address, i2c_payload_size);
 
-    while (Wire.available())
+    while (_wire->available())
     {
-        const int8_t encode = Wire.read();
-        const bool is_press = Wire.read() != 0xFF;
+        const int8_t encode = _wire->read();
+        const bool is_press = _wire->read() != 0xFF;
 
         if (_on_rotate != nullptr)
         {
