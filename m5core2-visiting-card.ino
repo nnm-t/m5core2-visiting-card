@@ -136,7 +136,6 @@ void setup() {
 
 void loop()
 {
-
 }
 
 
@@ -184,7 +183,6 @@ void onTimerTicked()
     pSettings->update();
     counter.update();
 
-    // todo: I2C 受信できない
     #ifdef ENABLE_PLUS_MODULE
     plus_encoder.update();
     #endif

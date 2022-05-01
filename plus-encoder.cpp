@@ -15,7 +15,7 @@ void PlusEncoder::update()
         const int8_t encode = _wire->read();
         const bool is_press = _wire->read() != 0xFF;
 
-        if (_on_rotate != nullptr)
+        if (_on_rotate != nullptr && encode != 0)
         {
             _on_rotate(encode);
         }
@@ -24,12 +24,12 @@ void PlusEncoder::update()
         {
             if (_is_pressed)
             {
-                return;
+                continue;
             }
 
             _on_pressed();
             _is_pressed = true;
-            return;
+            continue;
         }
 
         _is_pressed = false;

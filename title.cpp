@@ -37,18 +37,21 @@ void Title::update(LGFX* const lcd)
     #ifdef BOARD_M5CORE
     // 電池残量
     const int8_t battery_level = M5.Power.getBatteryLevel();
-    lcd->drawString(String(battery_level) + "%", 40, 0);
+    lcd->drawString(String(battery_level) + "%", 32, 0);
     #endif
     #ifdef BOARD_M5CORE2
     // 電圧
     const float voltage = M5.Axp.GetBatVoltage();
-    lcd->drawString(String(voltage) + "V", 40, 0);
+    lcd->drawString(String(voltage) + "V", 32, 0);
     #endif
     #ifdef ENABLE_SHT31
     // 温湿度
     const float temperature = sht31->readTemperature();
     const float humidity = sht31->readHumidity();
-    lcd->drawString(String(temperature, 0) + "℃, " + String(humidity, 0) + "％", 160, 0);
+    lcd->drawString(String(temperature, 0), 96, 0);
+    lcd->drawString("℃", 120, 0);
+    lcd->drawString(String(humidity, 0), 156, 0);
+    lcd->drawString("%", 180, 0);
     #endif
 }
 
@@ -59,7 +62,6 @@ void Title::draw_counter(LGFX* const lcd, Counter* const counter)
     const float min = counter->get_count_num_min();
     const int32_t width = 96;
 
-    lcd->drawString("周期", 160, 0);
     // 背景
     lcd->fillRect(208, 4, width, 16, _foreground.getRGB888());
 

@@ -15,7 +15,7 @@
 class PlusEncoder
 {
     static constexpr const uint8_t i2c_address = 0x62;
-    static constexpr const size_t i2c_payload_size = 2;
+    static constexpr const uint8_t i2c_payload_size = 2;
 
     TwoWire* const _wire;
     bool _is_pressed = false;
