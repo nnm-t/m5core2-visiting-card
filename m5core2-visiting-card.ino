@@ -10,7 +10,6 @@
 #include <Ticker.h>
 
 #include <LovyanGFX.h>
-#include <Adafruit_NeoPixel.h>
 #ifdef ENABLE_SHT31
 #include <Adafruit_SHT31.h>
 #endif
@@ -47,10 +46,6 @@ namespace {
     #endif
 
     Counter counter;
-
-    #ifdef ENABLE_PLUS_MODULE
-    PlusEncoder plus_encoder(wire);
-    #endif
 
     #ifdef ENABLE_SHT31
     Adafruit_SHT31 sht31(wire);
@@ -113,19 +108,6 @@ void setup() {
     pSettings->begin(lcd, counter, neopixel);
     #endif
 
-    #ifdef ENABLE_PLUS_MODULE
-    plus_encoder.begin([&] (int8_t encode) { 
-        // Counter 周期変更
-        counter.set_count_num(counter.get_count_num() + encode);
-        // Title 描画
-        pSettings->draw_counter();
-    }, [&] { 
-        // Counter 停止/再開
-         counter.set_enabled(!counter.is_enabled());
-        // Title 描画
-        pSettings->draw_counter();
-    });
-    #endif
     counter.begin([&] { pSettings->next(); });
 
     // 輝度default
@@ -183,9 +165,4 @@ void onTimerTicked()
 
     pSettings->update();
     counter.update();
-
-    // todo: I2C 受信できない
-    #ifdef ENABLE_PLUS_MODULE
-    plus_encoder.update();
-    #endif
 }
