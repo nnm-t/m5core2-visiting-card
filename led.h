@@ -10,12 +10,8 @@
 #include <M5Core2.h>
 #endif
 
-#include <LovyanGFX.h>
 #include <ArduinoJson.h>
 #include <FastLED.h>
-
-#include "color.h"
-#include "led-pattern.h"
 
 class LED
 {
