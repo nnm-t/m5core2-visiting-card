@@ -19,21 +19,24 @@
 
 class LED
 {
+    static constexpr const uint16_t neopixel_column = 24;
+    static constexpr const uint16_t neopixel_row = 8;
+
 public:
     static constexpr const uint8_t neopixel_gpio = 26;
-    static constexpr const uint16_t neopixel_num = 192;
+    static constexpr const uint16_t neopixel_num = neopixel_column * neopixel_row;
 
 private:
     CRGB _leds[neopixel_num];
 
 public:
-    static LED fromJson(JsonVariant& json_led);
-
     LED()
     {
     }
 
     void begin();
 
-    void update();
+    void set(const uint16_t column, const uint16_t row, CRGB& crgb);
+
+    void show();
 };

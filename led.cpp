@@ -1,20 +1,16 @@
 #include "led.h"
 
-LED LED::fromJson(JsonVariant& json_led)
+void LED::set(const uint16_t column, const uint16_t row, CRGB& crgb)
 {
-    JsonVariant json_color = json_led["color"];
-    const Color color = Color::fromJson(json_color);
+    _leds[column + row * neopixel_column] = crgb;
+}
 
-    const LEDPattern pattern = static_cast<LEDPattern>(json_led["pattern"].as<uint8_t>());
-
-    return LED();
+void LED::show()
+{
+    FastLED.show();
 }
 
 void LED::begin()
 {
     FastLED.addLeds<NEOPIXEL, neopixel_gpio>(_leds, neopixel_num);
-}
-
-void LED::update()
-{
 }

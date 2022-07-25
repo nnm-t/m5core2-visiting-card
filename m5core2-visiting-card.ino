@@ -15,6 +15,7 @@
 #endif
 #include <ArduinoJson.h>
 
+#include "led.h"
 #include "settings.h"
 #include "counter.h"
 #ifdef ENABLE_PLUS_MODULE
@@ -33,15 +34,13 @@ namespace {
     constexpr uint8_t brightness_step = 32;
     constexpr uint8_t brightness_max = 255;
 
-    constexpr size_t neopixel_num = 10;
+    LED led;
 
     #ifdef BOARD_M5CORE
-    constexpr size_t neopixel_pin = 15;
     TwoWire* wire = &Wire;
     #endif
 
     #ifdef BOARD_M5CORE2
-    constexpr size_t neopixel_pin = 2;
     TwoWire* wire = &Wire1;
     #endif
 
@@ -50,8 +49,6 @@ namespace {
     #ifdef ENABLE_SHT31
     Adafruit_SHT31 sht31(wire);
     #endif
-
-    Adafruit_NeoPixel neopixel = Adafruit_NeoPixel(neopixel_num, neopixel_pin);
 
     uint8_t display_brightness = 127;
 }
@@ -100,12 +97,13 @@ void setup() {
         return;
     }
 
+    led.begin();
     // 設定/制御
     pSettings = Settings::fromJson(json_document);
     #ifdef ENABLE_SHT31
-    pSettings->begin(lcd, counter, neopixel, sht31);
+    pSettings->begin(lcd, counter, sht31);
     #else
-    pSettings->begin(lcd, counter, neopixel);
+    pSettings->begin(lcd, counter);
     #endif
 
     counter.begin([&] { pSettings->next(); });

@@ -16,7 +16,6 @@
 
 #include <LovyanGFX.h>
 #include <ArduinoJson.h>
-#include <Adafruit_NeoPixel.h>
 
 #include "color.h"
 #include "title.h"
@@ -28,7 +27,6 @@ class Settings
 {
     LGFX* _lcd = nullptr;
     Counter* _counter = nullptr;
-    Adafruit_NeoPixel* _neopixel = nullptr;
 #ifdef ENABLE_SHT31
     Adafruit_SHT31* _sht31 = nullptr;
 #endif
@@ -53,9 +51,9 @@ public:
     }
 
 #ifdef ENABLE_SHT31
-    void begin(LGFX& lcd, Counter& counter, Adafruit_NeoPixel& neopixel, Adafruit_SHT31& sht31);
+    void begin(LGFX& lcd, Counter& counter, Adafruit_SHT31& sht31);
 #else
-    void begin(LGFX& lcd, Counter& counter, Adafruit_NeoPixel& neopixel);
+    void begin(LGFX& lcd, Counter& counter);
 #endif
 
     void showCommon();

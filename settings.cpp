@@ -14,15 +14,14 @@ Settings* Settings::fromJson(JsonDocument& json_document)
 }
 
 #ifdef ENABLE_SHT31
-void Settings::begin(LGFX& lcd, Counter& counter, Adafruit_NeoPixel& neopixel, Adafruit_SHT31& sht31)
+void Settings::begin(LGFX& lcd, Counter& counter, Adafruit_SHT31& sht31)
 #else
-void Settings::begin(LGFX& lcd, Counter& counter, Adafruit_NeoPixel& neopixel)
+void Settings::begin(LGFX& lcd, Counter& counter)
 #endif
 {
     // 代入
     _lcd = &lcd;
     _counter = &counter;
-    _neopixel = &neopixel;
 
     // LCDクリア
     clearLCD();
