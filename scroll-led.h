@@ -20,18 +20,28 @@
 
 class ScrollLED
 {
-	const Color _color;
+	Color _color;
 
 	String _text;
 	std::vector<std::vector<uint8_t>> _led_text;
 
-	ScrollLED(String& text, const Color& color) : _text(text), _color(color)
+	// LED位置 オフセット
+	uint16_t _offset_x = LED::neopixel_column;
+	// 文字ドット オフセット
+	size_t _column = 0;
+
+	ScrollLED(String& text, Color& color) : _text(text), _color(color)
 	{
 
 	}
 
 public:
 	ScrollLED fromJson(JsonVariant& json_led);
+
+	size_t get_length()
+	{
+		return _led_text.size();
+	}
 	
 	void begin();
 
