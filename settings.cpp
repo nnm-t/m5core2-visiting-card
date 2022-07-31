@@ -8,12 +8,9 @@ Settings* Settings::fromJson(JsonDocument& json_document)
     JsonVariant json_menu = json_document["menu"];
     Menu menu = Menu::fromJson(json_menu);
 
-    JsonVariant json_led = json_document["led"];
-    ScrollLED scroll_led = ScrollLED::fromJson(json_led);
-
     JsonArray pages_json = json_document["page"];
 
-    return new Settings(title, menu, scroll_led, pages_json);
+    return new Settings(title, menu, pages_json);
 }
 
 #ifdef ENABLE_SHT31
@@ -29,8 +26,6 @@ void Settings::begin(LGFX& lcd, LED& led, Counter& counter)
 
     // LCDクリア
     clearLCD();
-    // LED初期化
-    _scroll_led.begin();
     // 共通表示
     showCommon();
 
@@ -47,7 +42,7 @@ void Settings::showCommon()
     draw_counter();
     _menu.show(_lcd);
 
-    _pages_iterator->show(_lcd);
+    _pages_iterator->show(_lcd, [this] { this->next(); });
 }
 
 void Settings::clearLCD()
@@ -65,7 +60,7 @@ void Settings::update()
 #else
     _title.update(_lcd);
 #endif
-    _scroll_led.update(_led);
+    _pages_iterator->updateScrollLED(_led);
 }
 
 void Settings::next()

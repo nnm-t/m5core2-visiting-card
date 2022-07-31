@@ -17,15 +17,17 @@
 #include "color.h"
 #include "text-element.h"
 #include "image.h"
+#include "scroll-led.h"
 
 class Page
 {
     Color _background_color;
     Image _image;
     std::vector<TextElement> _texts;
+    ScrollLED _scroll_led;
 
 public:
-    Page(const Color& background_color, Image& image, JsonArray& texts_json) : _background_color(background_color), _image(image), _texts(std::vector<TextElement>())
+    Page(const Color& background_color, Image& image, JsonArray& texts_json, ScrollLED& scroll_led) : _background_color(background_color), _image(image), _texts(std::vector<TextElement>()), _scroll_led(scroll_led)
     {
         _texts.reserve(texts_json.size());
         
@@ -37,5 +39,7 @@ public:
 
     static Page fromJson(JsonObject& page_json);
 
-    void show(LGFX* lcd);
+    void show(LGFX* lcd, std::function<void()>&& on_led_completed);
+
+    void updateScrollLED(LED* led);
 };

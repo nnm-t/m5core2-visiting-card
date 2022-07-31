@@ -35,14 +35,13 @@ class Settings
 
     Title _title;
     Menu _menu;
-    ScrollLED _scroll_led;
     std::vector<Page> _pages;
     std::vector<Page>::iterator _pages_iterator;
 
 public:
     static Settings* fromJson(JsonDocument& json_document);
 
-    Settings(Title& title, Menu& menu, ScrollLED& scroll_led, JsonArray& pages_json) : _menu(menu), _title(title), _scroll_led(scroll_led), _pages(std::vector<Page>())
+    Settings(Title& title, Menu& menu, JsonArray& pages_json) : _menu(menu), _title(title), _pages(std::vector<Page>())
     {
         _pages.reserve(pages_json.size());
         for (JsonObject&& page_json : pages_json)

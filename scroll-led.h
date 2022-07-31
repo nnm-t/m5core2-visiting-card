@@ -3,6 +3,7 @@
 #include "config.h"
 
 #include <algorithm>
+#include <functional>
 #include <vector>
 
 #ifdef BOARD_M5CORE
@@ -29,6 +30,8 @@ class ScrollLED
 	uint16_t _offset_x = LED::neopixel_column;
 	// 文字ドット オフセット
 	size_t _column = 0;
+	// リセット
+	std::function<void()> _on_completed = nullptr;
 
 	ScrollLED(String& text, Color& color) : _text(text), _color(color)
 	{
@@ -43,7 +46,7 @@ public:
 		return _led_text.size();
 	}
 	
-	void begin();
+	void begin(std::function<void()>& on_completed);
 
 	void update(LED* led);
 };

@@ -33,7 +33,7 @@ public:
 
     }
 
-    void begin(std::function<void()>&& on_ticked);
+    void begin(std::function<void()>&& on_ticked = nullptr);
 
     void update();
 

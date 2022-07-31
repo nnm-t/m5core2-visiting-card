@@ -106,7 +106,7 @@ void setup() {
     pSettings->begin(lcd, led, counter);
     #endif
 
-    counter.begin([&] { pSettings->next(); });
+    counter.begin();
 
     // 輝度default
     lcd.setBrightness(display_brightness);
