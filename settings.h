@@ -22,10 +22,12 @@
 #include "menu.h"
 #include "page.h"
 #include "counter.h"
+#include "scroll-led.h"
 
 class Settings
 {
     LGFX* _lcd = nullptr;
+    LED* _led = nullptr;
     Counter* _counter = nullptr;
 #ifdef ENABLE_SHT31
     Adafruit_SHT31* _sht31 = nullptr;
@@ -33,13 +35,14 @@ class Settings
 
     Title _title;
     Menu _menu;
+    ScrollLED _scroll_led;
     std::vector<Page> _pages;
     std::vector<Page>::iterator _pages_iterator;
 
 public:
     static Settings* fromJson(JsonDocument& json_document);
 
-    Settings(Title& title, Menu& menu, JsonArray& pages_json) : _menu(menu), _title(title), _pages(std::vector<Page>())
+    Settings(Title& title, Menu& menu, ScrollLED& scroll_led, JsonArray& pages_json) : _menu(menu), _title(title), _scroll_led(scroll_led), _pages(std::vector<Page>())
     {
         _pages.reserve(pages_json.size());
         for (JsonObject&& page_json : pages_json)
@@ -51,9 +54,9 @@ public:
     }
 
 #ifdef ENABLE_SHT31
-    void begin(LGFX& lcd, Counter& counter, Adafruit_SHT31& sht31);
+    void begin(LGFX& lcd, LED& led, Counter& counter, Adafruit_SHT31& sht31);
 #else
-    void begin(LGFX& lcd, Counter& counter);
+    void begin(LGFX& lcd, LED& led, Counter& counter);
 #endif
 
     void showCommon();

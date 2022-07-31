@@ -14,7 +14,7 @@
 
 #include <ArduinoJson.h>
 
-#include "misakiUTF16/misakiUTF16.h"
+#include "misakiUTF16.h"
 #include "color.h"
 #include "led.h"
 
@@ -36,7 +36,7 @@ class ScrollLED
 	}
 
 public:
-	ScrollLED fromJson(JsonVariant& json_led);
+	static ScrollLED fromJson(JsonVariant& json_led);
 
 	size_t get_length()
 	{

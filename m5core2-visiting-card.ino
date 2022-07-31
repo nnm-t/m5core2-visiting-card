@@ -101,9 +101,9 @@ void setup() {
     // 設定/制御
     pSettings = Settings::fromJson(json_document);
     #ifdef ENABLE_SHT31
-    pSettings->begin(lcd, counter, sht31);
+    pSettings->begin(lcd, led, counter, sht31);
     #else
-    pSettings->begin(lcd, counter);
+    pSettings->begin(lcd, led, counter);
     #endif
 
     counter.begin([&] { pSettings->next(); });

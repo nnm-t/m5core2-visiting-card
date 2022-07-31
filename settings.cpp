@@ -8,23 +8,29 @@ Settings* Settings::fromJson(JsonDocument& json_document)
     JsonVariant json_menu = json_document["menu"];
     Menu menu = Menu::fromJson(json_menu);
 
+    JsonVariant json_led = json_document["led"];
+    ScrollLED scroll_led = ScrollLED::fromJson(json_led);
+
     JsonArray pages_json = json_document["page"];
 
-    return new Settings(title, menu, pages_json);
+    return new Settings(title, menu, scroll_led, pages_json);
 }
 
 #ifdef ENABLE_SHT31
-void Settings::begin(LGFX& lcd, Counter& counter, Adafruit_SHT31& sht31)
+void Settings::begin(LGFX& lcd, LED& led, Counter& counter, Adafruit_SHT31& sht31)
 #else
-void Settings::begin(LGFX& lcd, Counter& counter)
+void Settings::begin(LGFX& lcd, LED& led, Counter& counter)
 #endif
 {
     // 代入
     _lcd = &lcd;
     _counter = &counter;
+    _led = &led;
 
     // LCDクリア
     clearLCD();
+    // LED初期化
+    _scroll_led.begin();
     // 共通表示
     showCommon();
 
@@ -59,6 +65,7 @@ void Settings::update()
 #else
     _title.update(_lcd);
 #endif
+    _scroll_led.update(_led);
 }
 
 void Settings::next()
