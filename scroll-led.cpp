@@ -16,9 +16,6 @@ void ScrollLED::begin(std::function<void()>& on_completed)
 
 	char* ptr = const_cast<char*>(_text.c_str());
 	size_t index = 0;
-	// 文字数 * 8 bytes
-	_led_text.reserve(_text.length());
-
 	while (*ptr)
 	{
 		// 8bit * 8行
@@ -30,8 +27,9 @@ void ScrollLED::begin(std::function<void()>& on_completed)
 			break;
 		}
 
+		_led_text.push_back(std::vector<uint8_t>());
 		// 配列の中身をコピー
-		_led_text.reserve(8);
+		_led_text[index].reserve(8);
 		std::copy(font, font + 8, _led_text[index].begin());
 		index++;
 	}
