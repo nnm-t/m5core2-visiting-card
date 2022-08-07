@@ -45,8 +45,10 @@ void ScrollLED::update(LED* led)
 		index_end = get_length();
 	}
 
+	// 3回ループ
 	for (size_t index = index_start; index < index_end; index++)
 	{
+		const size_t index_relative = index - index_start;
 		uint16_t column_start = 0;
 		// 始点 n列目から表示
 		if (index == index_start)
@@ -54,34 +56,39 @@ void ScrollLED::update(LED* led)
 			column_start = _column % 8;
 		}
 
-		uint16_t column_end = 8;
+		uint16_t column_end = LED::neopixel_column;
 		// 終点 n列目まで表示
 		if (index == index_end - 1)
 		{
-			column_end = 8 - (_offset_x % 8);
+			column_end = LED::neopixel_column - (_offset_x % 8);
 		}
 
 		// ドット n列目
-		for (uint16_t column = 0; column < LED::neopixel_column; column++)
+		// index毎に8行しか更新しない
+		for (uint16_t column = 0; column < 8; column++)
 		{
+			// todo
+			const uint16_t led_column = (index_relative * 8) + column + _offset_x + _column >= LED::neopixel_column ? (LED::neopixel_column - 1) : (index_relative * 8) + column + _offset_x + _column;
 			// ドット n行目
 			for (uint16_t row = 0; row < LED::neopixel_row; row++)
 			{
-				if (column + _offset_x < column_start || column + _offset_x >= column_end)
+				if (led_column < column_start || led_column >= column_end)
 				{
-					led->unset(column, row);
+					led->unset(led_column, row);
 					continue;
 				}
 
-				if ((_led_text[index][row] >> (8 - column) & 0x01))
+				if ((_led_text[index][row] >> (8 - (led_column % 8))) & 0x01)
 				{
-					led->set(column, row, _color);
+					led->set(led_column, row, _color);
 					continue;
 				}
 
-				led->unset(column, row);
+				led->unset(led_column, row);
 			}
 		}
+
+		led->show();
 
 		if (_offset_x <= 0)
 		{
