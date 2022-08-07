@@ -28,6 +28,7 @@ class ScrollLED
 
 	// 文字列左上のx座標
 	int16_t _x_offset = LED::neopixel_column;
+	bool _is_prepared = false;
 
 	// リセット
 	std::function<void()> _on_completed = nullptr;

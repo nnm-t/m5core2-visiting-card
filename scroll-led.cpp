@@ -12,6 +12,13 @@ ScrollLED ScrollLED::fromJson(JsonVariant& json_led)
 
 void ScrollLED::begin(std::function<void()>& on_completed)
 {
+	_x_offset = LED::neopixel_column;
+	// 一度だけ行えばよい
+	if (_is_prepared)
+	{
+		return;
+	}
+
 	_on_completed = on_completed;
 
 	char* ptr = const_cast<char*>(_text.c_str());
@@ -33,6 +40,8 @@ void ScrollLED::begin(std::function<void()>& on_completed)
 		std::copy(font, font + 8, _led_text[index].begin());
 		index++;
 	}
+
+	_is_prepared = true;
 }
 
 void ScrollLED::update(LED* led)
