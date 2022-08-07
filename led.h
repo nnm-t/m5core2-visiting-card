@@ -21,6 +21,8 @@ public:
     static constexpr const uint16_t neopixel_column = 24;
     static constexpr const uint16_t neopixel_row = 8;
 
+    static constexpr const uint16_t neopixel_char_width = 8;
+
     static constexpr const uint8_t neopixel_gpio = 26;
     static constexpr const uint16_t neopixel_num = neopixel_column * neopixel_row;
 

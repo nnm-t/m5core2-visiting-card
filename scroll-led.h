@@ -26,10 +26,9 @@ class ScrollLED
 	String _text;
 	std::vector<std::vector<uint8_t>> _led_text;
 
-	// LED位置 オフセット
-	uint16_t _offset_x = LED::neopixel_column;
-	// 文字ドット オフセット
-	size_t _column = 0;
+	// 文字列左上のx座標
+	int16_t _x_offset = LED::neopixel_column;
+
 	// リセット
 	std::function<void()> _on_completed = nullptr;
 
