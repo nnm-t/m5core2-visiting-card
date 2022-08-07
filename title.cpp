@@ -54,6 +54,7 @@ void Title::update(LGFX* const lcd)
 
 void Title::draw_counter(LGFX* const lcd, Counter* const counter)
 {
+#ifdef ENABLE_PLUS_MODULE
     init_text(lcd);
 
     const float min = counter->get_count_num_min();
@@ -75,4 +76,5 @@ void Title::draw_counter(LGFX* const lcd, Counter* const counter)
     lcd->fillRect(208, 4, fill_width, 16, _background.getRGB888());
     // 枠
     lcd->drawRect(208, 4, width, 16, _foreground.getRGB888());
+#endif
 }
