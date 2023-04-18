@@ -9,7 +9,8 @@
 #include <M5Core2.h>
 #endif
 
-#include <LovyanGFX.h>
+#include <LovyanGFX.hpp>
+#include <LGFX_AUTODETECT.hpp>
 #include <ArduinoJson.h>
 
 #include "color.h"

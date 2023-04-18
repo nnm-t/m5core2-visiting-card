@@ -10,7 +10,10 @@
 #endif
 #include <Ticker.h>
 
-#include <LovyanGFX.h>
+#define LGFX_AUTODETECT
+
+#include <LovyanGFX.hpp>
+#include <LGFX_AUTODETECT.hpp>
 #include <Adafruit_NeoPixel.h>
 #ifdef ENABLE_SHT31
 #include <Adafruit_SHT31.h>

@@ -17,7 +17,7 @@ TextElement TextElement::fromJson(JsonObject& json_element)
 
 void TextElement::setFont(LGFX* const lcd)
 {
-    const lgfx::v0::IFont* font;
+    const lgfx::v1::IFont* font;
 
     switch(_size)
     {

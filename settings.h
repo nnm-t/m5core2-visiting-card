@@ -14,7 +14,8 @@
 #include "Adafruit_SHT31.h"
 #endif
 
-#include <LovyanGFX.h>
+#include <LovyanGFX.hpp>
+#include <LGFX_AUTODETECT.hpp>
 #include <ArduinoJson.h>
 #include <Adafruit_NeoPixel.h>
 
